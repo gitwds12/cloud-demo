@@ -1,0 +1,29 @@
+server:
+  port: 9000 # 端口
+
+spring:
+  application:
+    name: gateway-server # 应用名称
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # 是否与服务发现组件进行结合，通过 serviceId 转发到具体服务实例。
+          enabled: true                  # 是否开启基于服务发现的路由规则
+          lower-case-service-id: true    # 是否将服务名称转小写
+      # 路由规则
+      routes:
+        - id: service-provider           # 路由 ID，唯一
+          uri: http://localhost:7070/   # 目标 URI，路由到微服务的地址
+          predicates:                   # 断言（判断条件）
+            - Path=/product/**          # 匹配对应 URL 的请求，将匹配到的请求追加在目标 URI 之后
+
+# 配置 Eureka Server 注册中心
+eureka:
+  instance:
+    hostname: localhost              # 主机名，不配置的时候将根据操作系统的主机名来获取
+  client:
+    register-with-eureka: true   # 是否将自己注册到注册中心，默认为 true
+    fetch-registry: true         # 是否从注册中心获取服务注册信息，默认为 true
+    service-url:                  # 注册中心对外暴露的注册地址
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/

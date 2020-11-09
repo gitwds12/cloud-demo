@@ -1,0 +1,71 @@
+server:
+  port: 7070 # 端口
+
+spring:
+  application:
+    name: service-provider # 应用名称
+  redis:
+    host: localhost # Redis服务器地址
+    database: 0 # Redis数据库索引（默认为0）
+    port: 6379 # Redis服务器连接端口
+    password: # Redis服务器连接密码（默认为空）
+    jedis:
+      pool:
+        max-active: 8 # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 8 # 连接池中的最大空闲连接
+        min-idle: 0 # 连接池中的最小空闲连接
+    timeout: 3000ms # 连接超时时间（毫秒）
+  rabbitmq:
+    host: localhost # rabbitmq的连接地址
+    port: 5672 # rabbitmq的连接端口号
+    username: guest # rabbitmq的用户名
+    password: guest # rabbitmq的密码
+  datasource:
+    url: jdbc:mysql://localhost:3306/mytest?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+  data:
+    elasticsearch:
+      cluster-nodes: 127.0.0.1:9300
+
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath*:com/**/mapper/*.xml
+
+
+# OSS相关配置信息
+aliyun:
+  oss:
+    endpoint: oss-cn-beijing.aliyuncs.com # oss对外服务的访问域名
+    accessKeyId: LTAI4G2ETHorRp7tUsCaSGgL # 访问身份验证中用到用户标识
+    accessKeySecret: UPVh18JGr5BfrRHPikE4ZXQ66flAIh # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    bucketName: cloud-oss2 # oss的存储空间
+    policy:
+      expire: 300 # 签名有效期(S)
+    maxSize: 10 # 上传文件大小(M)
+    callback: http://localhost:7070/aliyun/oss/callback # 文件上传成功后的回调地址
+    dir:
+      prefix: mall/images/ # 上传文件夹路径前缀
+
+
+
+# 配置 Eureka Server 注册中心
+eureka:
+  instance:
+    hostname: localhost              # 主机名，不配置的时候将根据操作系统的主机名来获取
+  client:
+    register-with-eureka: true   # 是否将自己注册到注册中心，默认为 true
+    fetch-registry: true         # 是否从注册中心获取服务注册信息，默认为 true
+    service-url:                  # 注册中心对外暴露的注册地址
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/
+
+
+# 自定义redis key
+redis:
+  key:
+    prefix:
+      authCode: "portal:authCode:"
+    expire:
+      authCode: 120 # 验证码超期时间
